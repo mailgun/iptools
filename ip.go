@@ -3,7 +3,7 @@ package iptools
 import "net"
 
 // Ranges of addresses allocated by IANA for private internets, as per RFC1918.
-const PrivateNetworks = []string{
+var PrivateNetworks = []string{
 	"10.0.0.0/8",
 	"172.16.0.0/12",
 	"192.168.0.0/16",
@@ -28,7 +28,7 @@ func GetHostIPs() ([]net.IP, error) {
 
 // GetPrivateHostIPs returns a list of host's private IP addresses.
 func GetPrivateHostIPs() ([]net.IP, error) {
-	ips, err := GetIPs()
+	ips, err := GetHostIPs()
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func GetPrivateHostIPs() ([]net.IP, error) {
 }
 
 // IsPrivate determines whether a passed IP address is from one of private blocks or not.
-func IsPrivate(ip net.IP) (bool, error) {
+func IsPrivate(ip net.IP) bool {
 	for _, network := range PrivateNetworks {
 		_, ipnet, _ := net.ParseCIDR(network)
 		if ipnet.Contains(ip) {
