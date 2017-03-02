@@ -5,10 +5,12 @@ import (
 	"strings"
 )
 
-// Ranges of addresses allocated by IANA for private internets, as per RFC1918.
+// Ranges of addresses allocated by IANA for private internets, as per RFC1918 and RFC3927
+// for Link-local addresses.
 var PrivateNetworks = []string{
 	"10.0.0.0/8",
 	"172.16.0.0/12",
+	"169.254.0.0/16",
 	"192.168.0.0/16",
 }
 
