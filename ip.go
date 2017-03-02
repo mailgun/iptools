@@ -12,6 +12,8 @@ var PrivateNetworks = []string{
 	"172.16.0.0/12",
 	"169.254.0.0/16",
 	"192.168.0.0/16",
+	"fe80::/10",
+	"fd00::/8",
 }
 
 var privateNets []*net.IPNet
