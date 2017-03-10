@@ -5,11 +5,27 @@ import (
 	"strings"
 )
 
-// Ranges of addresses allocated by IANA for private internets, as per RFC1918.
+// Ranges of addresses allocated by IANA for private internets, as per RFC1918 and RFC3927
+// for Link-local addresses.
 var PrivateNetworks = []string{
 	"10.0.0.0/8",
 	"172.16.0.0/12",
+	"169.254.0.0/16",
 	"192.168.0.0/16",
+	"fe80::/10",
+	"fd00::/8",
+}
+
+var privateNets []*net.IPNet
+
+func init() {
+	for _, network := range PrivateNetworks {
+		_, ipnet, err := net.ParseCIDR(network)
+		if err != nil {
+			panic(err)
+		}
+		privateNets = append(privateNets, ipnet)
+	}
 }
 
 // GetHostIPs returns a list of IP addresses of all host's interfaces.
@@ -59,8 +75,7 @@ func GetPrivateHostIPs() ([]net.IP, error) {
 
 // IsPrivate determines whether a passed IP address is from one of private blocks or not.
 func IsPrivate(ip net.IP) bool {
-	for _, network := range PrivateNetworks {
-		_, ipnet, _ := net.ParseCIDR(network)
+	for _, ipnet := range privateNets {
 		if ipnet.Contains(ip) {
 			return true
 		}
